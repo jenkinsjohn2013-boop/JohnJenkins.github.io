@@ -332,49 +332,9 @@
     font-style: italic;
   }
 
-  .proj-img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    border-radius: 2px;
-    margin-bottom: 20px;
-    display: block;
-  }
-
-  .proj-img-placeholder {
-    width: 100%;
-    height: 220px;
-    background: var(--accent-light);
-    border: 2px dashed var(--rule);
-    border-radius: 2px;
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    color: var(--ink-light);
-  }
-
-  .proj-img-placeholder span {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  .proj-img-placeholder svg {
-    opacity: 0.35;
-  }
-
-  /* FEATURED project — larger, two-column layout */
-  .project-item.featured {
-    grid-template-columns: 1fr;
-  }
-
-  .project-item.featured .proj-title {
-    font-size: 24px;
-  }
+  /* FEATURED project */
+  .project-item.featured { grid-template-columns: 1fr; }
+  .project-item.featured .proj-title { font-size: 24px; }
 
   .featured-badge {
     display: inline-block;
@@ -387,6 +347,156 @@
     padding: 4px 12px;
     border-radius: 2px;
     margin-bottom: 12px;
+  }
+
+  /* GALLERY */
+  .proj-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .proj-gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 2px;
+    background: var(--accent-light);
+    border: 1px solid var(--rule);
+    aspect-ratio: 16/10;
+    cursor: pointer;
+  }
+
+  .proj-gallery-item img,
+  .proj-gallery-item video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease, opacity 0.2s;
+  }
+
+  .proj-gallery-item:hover img { transform: scale(1.03); opacity: 0.9; }
+
+  .proj-gallery-item video { cursor: default; }
+
+  /* overlay play icon for non-video clickable items */
+  .proj-gallery-item.is-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(28,61,110,0);
+    transition: background 0.2s;
+    pointer-events: none;
+  }
+  .proj-gallery-item.is-img:hover::after { background: rgba(28,61,110,0.08); }
+
+  /* placeholder tile */
+  .proj-gallery-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 2px dashed var(--rule);
+    border-radius: 2px;
+    aspect-ratio: 16/10;
+    color: var(--ink-light);
+    background: var(--accent-light);
+    padding: 12px;
+    text-align: center;
+  }
+
+  .proj-gallery-placeholder svg { opacity: 0.3; }
+
+  .proj-gallery-placeholder span {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.5;
+  }
+
+  /* LIGHTBOX */
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,12,0.96);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .lightbox.open { display: flex; }
+
+  .lightbox-inner {
+    position: relative;
+    max-width: 92vw;
+    max-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lightbox-inner img {
+    max-width: 88vw;
+    max-height: 86vh;
+    object-fit: contain;
+    border-radius: 2px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+  }
+
+  .lightbox-close {
+    position: fixed;
+    top: 20px; right: 28px;
+    color: rgba(255,255,255,0.7);
+    font-size: 28px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: var(--mono);
+    line-height: 1;
+    transition: color 0.2s;
+    z-index: 1000;
+  }
+
+  .lightbox-close:hover { color: #fff; }
+
+  .lightbox-nav {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #fff;
+    font-size: 22px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.2s;
+    z-index: 1000;
+  }
+
+  .lightbox-nav:hover { background: rgba(255,255,255,0.18); }
+  .lightbox-nav.prev { left: 16px; }
+  .lightbox-nav.next { right: 16px; }
+
+  .lightbox-caption {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
   }
 
   /* EXPERIENCE */
@@ -767,13 +877,39 @@
     <div class="project-item featured">
       <div>
         <div class="featured-badge">★ Senior Capstone — EGR 4830</div>
-        <!-- Replace capstone.jpg with your actual image filename -->
-        <img src="capstone.jpg" alt="Delta Robot Haptic Feedback Device" class="proj-img"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="proj-img-placeholder" style="display:none;">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-          <span>Add capstone.jpg to your folder</span>
+
+        <!--
+          CAPSTONE GALLERY
+          Add/remove <div class="proj-gallery-item"> blocks as needed.
+          For images: class="proj-gallery-item is-img"  → click opens lightbox
+          For videos: class="proj-gallery-item"         → inline playback with controls
+          Suggested files: images/capstone-1.jpg, images/capstone-2.jpg, videos/capstone-demo.mp4
+        -->
+        <div class="proj-gallery">
+          <div class="proj-gallery-item is-img" onclick="openLightbox(this)">
+            <img src="images/capstone-1.jpg" alt="Delta robot overview"
+              onerror="this.parentElement.classList.add('hidden-img')">
+          </div>
+          <div class="proj-gallery-item is-img" onclick="openLightbox(this)">
+            <img src="images/capstone-2.jpg" alt="Capstan drive assembly"
+              onerror="this.parentElement.classList.add('hidden-img')">
+          </div>
+          <div class="proj-gallery-item is-img" onclick="openLightbox(this)">
+            <img src="images/capstone-3.jpg" alt="Spherical wrist detail"
+              onerror="this.parentElement.classList.add('hidden-img')">
+          </div>
+          <div class="proj-gallery-item">
+            <video controls muted playsinline>
+              <source src="videos/capstone-demo.mp4" type="video/mp4">
+            </video>
+          </div>
+          <!-- PLACEHOLDER — shown only when no images are loaded yet -->
+          <div class="proj-gallery-placeholder">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            <span>Add photos to<br>images/ folder</span>
+          </div>
         </div>
+
         <div class="proj-category">Robotics · Controls · Haptics · Senior Capstone</div>
         <div class="proj-title">Teleoperation of a UR3 with a Haptic Feedback Device</div>
         <p class="proj-desc">
@@ -790,17 +926,37 @@
           <span class="tool-tag">Capstan Drives</span>
         </div>
       </div>
-      <div class="proj-year" style="padding-top:0; margin-top:20px; font-size:14px;">Jan – May 2026 · Cal Poly Pomona<br><span style="font-size:12px; color:var(--ink-light);">with M. Crofford, D. Heigher, J. Huizar<br>Advisor: Dr. Benham Bahr</span></div>
+      <div class="proj-year" style="padding-top:0; margin-top:20px; font-size:14px;">
+        Jan – May 2026 · Cal Poly Pomona<br>
+        <span style="font-size:12px; color:var(--ink-light);">with M. Crofford, D. Heigher, J. Huizar<br>Advisor: Dr. Benham Bahr</span>
+      </div>
     </div>
 
+    <!-- FSAE -->
     <div class="project-item">
       <div>
-        <!-- Replace fsae.jpg with your actual image filename -->
-        <img src="fsae.jpg" alt="FSAE Brakes and Wheels" class="proj-img"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="proj-img-placeholder" style="display:none;">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-          <span>Add fsae.jpg to your folder</span>
+        <!--
+          FSAE GALLERY
+          Suggested files: images/fsae-1.jpg, images/fsae-2.jpg, images/fsae-3.jpg
+          Add a video: videos/fsae-run.mp4
+        -->
+        <div class="proj-gallery">
+          <div class="proj-gallery-item is-img" onclick="openLightbox(this)">
+            <img src="images/fsae-1.jpg" alt="Wheel hub assembly"
+              onerror="this.parentElement.classList.add('hidden-img')">
+          </div>
+          <div class="proj-gallery-item is-img" onclick="openLightbox(this)">
+            <img src="images/fsae-2.jpg" alt="Suspension upright"
+              onerror="this.parentElement.classList.add('hidden-img')">
+          </div>
+          <div class="proj-gallery-item is-img" onclick="openLightbox(this)">
+            <img src="images/fsae-3.jpg" alt="Braking system installed"
+              onerror="this.parentElement.classList.add('hidden-img')">
+          </div>
+          <div class="proj-gallery-placeholder">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            <span>Add photos to<br>images/ folder</span>
+          </div>
         </div>
         <div class="proj-category">Vehicle Dynamics · Manufacturing · Leadership</div>
         <div class="proj-title">Formula SAE Electric — Brakes & Wheels Engineering Lead</div>
@@ -816,14 +972,26 @@
       <div class="proj-year">Nov 2023 – Jun 2025</div>
     </div>
 
+    <!-- NASA JPL -->
     <div class="project-item">
       <div>
-        <!-- Replace nasa-latch.jpg with your actual image filename -->
-        <img src="nasa-latch.jpg" alt="NASA JPL Mars Lander Latch" class="proj-img"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="proj-img-placeholder" style="display:none;">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-          <span>Add nasa-latch.jpg to your folder</span>
+        <!--
+          NASA JPL GALLERY
+          Suggested files: images/nasa-1.jpg (CAD render), images/nasa-2.jpg (analysis)
+        -->
+        <div class="proj-gallery">
+          <div class="proj-gallery-item is-img" onclick="openLightbox(this)">
+            <img src="images/nasa-1.jpg" alt="Mars lander latch CAD"
+              onerror="this.parentElement.classList.add('hidden-img')">
+          </div>
+          <div class="proj-gallery-item is-img" onclick="openLightbox(this)">
+            <img src="images/nasa-2.jpg" alt="FEA analysis results"
+              onerror="this.parentElement.classList.add('hidden-img')">
+          </div>
+          <div class="proj-gallery-placeholder">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            <span>Add photos to<br>images/ folder</span>
+          </div>
         </div>
         <div class="proj-category">Machine Design · Systems Engineering</div>
         <div class="proj-title">NASA JPL Interstage Latch — Mars Lander EDL Payload System</div>
@@ -838,14 +1006,31 @@
       <div class="proj-year">Jan – May 2025</div>
     </div>
 
+    <!-- CARGO DRONE -->
     <div class="project-item">
       <div>
-        <!-- Replace drone.jpg with your actual image filename -->
-        <img src="drone.jpg" alt="IAM3D Cargo Drone" class="proj-img"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="proj-img-placeholder" style="display:none;">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-          <span>Add drone.jpg to your folder</span>
+        <!--
+          DRONE GALLERY
+          Suggested files: images/drone-1.jpg, images/drone-2.jpg, videos/drone-flight.mp4
+        -->
+        <div class="proj-gallery">
+          <div class="proj-gallery-item is-img" onclick="openLightbox(this)">
+            <img src="images/drone-1.jpg" alt="Drone payload system"
+              onerror="this.parentElement.classList.add('hidden-img')">
+          </div>
+          <div class="proj-gallery-item is-img" onclick="openLightbox(this)">
+            <img src="images/drone-2.jpg" alt="Retention mechanism detail"
+              onerror="this.parentElement.classList.add('hidden-img')">
+          </div>
+          <div class="proj-gallery-item">
+            <video controls muted playsinline>
+              <source src="videos/drone-flight.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="proj-gallery-placeholder">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            <span>Add photos to<br>images/ folder</span>
+          </div>
         </div>
         <div class="proj-category">Robotics · Automation</div>
         <div class="proj-title">IAM3D Cargo Drone — Payload Systems Lead</div>
@@ -860,14 +1045,26 @@
       <div class="proj-year">2024 – Present</div>
     </div>
 
+    <!-- BATTERY INSPECTION -->
     <div class="project-item">
       <div>
-        <!-- Replace battery.jpg with your actual image filename -->
-        <img src="battery.jpg" alt="Battery X-Ray Inspection" class="proj-img"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="proj-img-placeholder" style="display:none;">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-          <span>Add battery.jpg to your folder</span>
+        <!--
+          BATTERY GALLERY
+          Suggested files: images/battery-1.jpg (x-ray equipment), images/battery-2.jpg (module)
+        -->
+        <div class="proj-gallery">
+          <div class="proj-gallery-item is-img" onclick="openLightbox(this)">
+            <img src="images/battery-1.jpg" alt="X-ray inspection equipment"
+              onerror="this.parentElement.classList.add('hidden-img')">
+          </div>
+          <div class="proj-gallery-item is-img" onclick="openLightbox(this)">
+            <img src="images/battery-2.jpg" alt="Battery module detail"
+              onerror="this.parentElement.classList.add('hidden-img')">
+          </div>
+          <div class="proj-gallery-placeholder">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            <span>Add photos to<br>images/ folder</span>
+          </div>
         </div>
         <div class="proj-category">Battery Systems · Inspection</div>
         <div class="proj-title">Lithium-Ion Battery X-Ray Inspection — Solartronics Engineering</div>
@@ -1103,9 +1300,9 @@
       <h3>Let's work together.</h3>
       <p>I'm actively seeking full-time mechanical engineering roles and internships in aerospace, advanced manufacturing, or product development. Based in the LA area and open to relocation.</p>
       <div class="contact-details">
-        <a href="/cdn-cgi/l/email-protection#254f404b4e4c4b560b4f4a4d4b17151416654248444c490b464a48" class="contact-row">
+        <a href="mailto:jenkins.john2013@gmail.com" class="contact-row">
           <span class="contact-row-label">Email</span>
-          <span class="__cf_email__" data-cfemail="bfd5dad1d4d6d1cc91d5d0d7d18d8f8e8cffd8d2ded6d391dcd0d2">[email&#160;protected]</span>
+          jenkins.john2013@gmail.com
         </a>
         <a href="tel:14242122107" class="contact-row">
           <span class="contact-row-label">Phone</span>
@@ -1136,4 +1333,82 @@
         <textarea class="form-textarea" placeholder="Tell me about the opportunity..."></textarea>
       </div>
       <button class="btn-primary" onclick="alert('Connect this to Formspree or EmailJS to send messages!')">Send Message</button>
-    </d
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>John Jenkins — Mechanical Engineer</p>
+  <p>Cal Poly Pomona · Class of 2026</p>
+</footer>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="handleLightboxClick(event)">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <button class="lightbox-nav prev" onclick="event.stopPropagation(); navigateLightbox(-1)">&#8249;</button>
+  <div class="lightbox-inner">
+    <img id="lightbox-img" src="" alt="">
+  </div>
+  <button class="lightbox-nav next" onclick="event.stopPropagation(); navigateLightbox(1)">&#8250;</button>
+  <div class="lightbox-caption" id="lightbox-caption"></div>
+</div>
+
+<script>
+  // Hide gallery tiles whose image fails to load
+  document.querySelectorAll('.proj-gallery-item.is-img img').forEach(img => {
+    img.addEventListener('error', () => {
+      img.closest('.proj-gallery-item').style.display = 'none';
+    });
+  });
+
+  // ── Lightbox ────────────────────────────────────────────────────────
+  let currentGallery = [];
+  let currentIndex   = 0;
+
+  function buildGallery(clickedItem) {
+    const gallery = clickedItem.closest('.proj-gallery');
+    return Array.from(gallery.querySelectorAll('.proj-gallery-item.is-img'))
+      .filter(el => el.style.display !== 'none');
+  }
+
+  function openLightbox(clickedItem) {
+    currentGallery = buildGallery(clickedItem);
+    currentIndex   = currentGallery.indexOf(clickedItem);
+    showLightboxImage();
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function showLightboxImage() {
+    const item = currentGallery[currentIndex];
+    const img  = item.querySelector('img');
+    document.getElementById('lightbox-img').src = img.src;
+    document.getElementById('lightbox-img').alt = img.alt;
+    document.getElementById('lightbox-caption').textContent =
+      (img.alt ? img.alt + '  \u00b7  ' : '') +
+      (currentIndex + 1) + ' / ' + currentGallery.length;
+  }
+
+  function navigateLightbox(dir) {
+    currentIndex = (currentIndex + dir + currentGallery.length) % currentGallery.length;
+    showLightboxImage();
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function handleLightboxClick(e) {
+    if (e.target === document.getElementById('lightbox')) closeLightbox();
+  }
+
+  document.addEventListener('keydown', e => {
+    if (!document.getElementById('lightbox').classList.contains('open')) return;
+    if (e.key === 'Escape')      closeLightbox();
+    if (e.key === 'ArrowRight')  navigateLightbox(1);
+    if (e.key === 'ArrowLeft')   navigateLightbox(-1);
+  });
+</script>
+</body>
+</html>
